@@ -18,12 +18,38 @@ This      is a second paragraph with extraneous whitespace.`);
   };
 
   const transformText = input => {
-    let output = input;
-    /*
-    your work goes here!
-    */
-    setTextOutput(output);
+    const words = input
+      .split(/\n/g) // elimina saltos de línea
+      .filter(line => !!line) // elimina del array los espacios vacíos
+      .map(line => line.replace(/\s{2,}/g, " ")) // elimina espacios adicionales
+      .join(" ") // convierte el array en un string, es decir una sola línea
+      .split(" "); // convierte el string (una línea) en un array de palabras
+
+    const MAX_LINE_WIDTH = 80;
+
+    let lines = "";
+
+    words.forEach((word, index) => {
+      const preffix = index === 0 ? "" : " ";
+      const splittedLines = lines.split(/\n/)
+      const currentLine = splittedLines[splittedLines.length - 1]
+
+      if (word.length >= MAX_LINE_WIDTH) {
+        lines = word;
+      }
+
+      if (currentLine.length + word.length + preffix.length < 80) {
+        lines += `${preffix}${word}`;
+      } else if (currentLine.length + word.length + preffix.length === 80) {
+        lines += `${preffix}${word}\n`;
+      } else {
+        lines += `\n${word}`;
+      }
+    })
+
+    setTextOutput(lines);
   }
+  
   
   return (
     <div className="App">
