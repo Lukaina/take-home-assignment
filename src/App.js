@@ -25,23 +25,23 @@ This      is a second paragraph with extraneous whitespace.`);
       .join(" ") // convierte el array en un string, es decir una sola línea
       .split(" "); // convierte el string (una línea) en un array de palabras
 
+      // console.log(words);
+
     const MAX_LINE_WIDTH = 80;
 
     let lines = "";
 
     words.forEach((word, index) => {
-      const preffix = index === 0 ? "" : " ";
-      const splittedLines = lines.split(/\n/)
-      const currentLine = splittedLines[splittedLines.length - 1]
+      const space = index === 0 ? "" : " ";
+      const totalLines = lines.split(/\n/)
+      const currentLine = totalLines[totalLines.length - 1]
 
       if (word.length >= MAX_LINE_WIDTH) {
-        lines = word;
-      }
-
-      if (currentLine.length + word.length + preffix.length < 80) {
-        lines += `${preffix}${word}`;
-      } else if (currentLine.length + word.length + preffix.length === 80) {
-        lines += `${preffix}${word}\n`;
+        lines += `${index === 0 ? '' : '\n'}${word}`; //Si es la primera palabra del array no agrega salto de línea
+      } else if (currentLine.length + word.length + space.length < MAX_LINE_WIDTH) {
+        lines += `${space}${word}`; //Concatena espacio y palabra
+      } else if (currentLine.length + word.length + space.length === MAX_LINE_WIDTH) {
+        lines += `${space}${word}\n`; //Agrega el salto
       } else {
         lines += `\n${word}`;
       }
