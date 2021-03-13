@@ -16,39 +16,53 @@ This      is a second paragraph with extraneous whitespace.`);
     event.preventDefault();
     transformText(textInput);
   };
+  
+  const formatParagraph = input => {
+    const words = input
+    .split(/\n/g) // elimina saltos de línea
+    .filter(line => !!line) // elimina del array los espacios vacíos
+    .map(line => line.replace(/\s{2,}/g, " ")) // elimina espacios adicionales
+    .join(" ") // convierte el array en un string, es decir una sola línea
+    .split(" "); // convierte el string (una línea) en un array de palabras
+
+    console.log(words);
+
+  const MAX_LINE_WIDTH = 80;
+
+  let lines = "";
+
+  words.forEach((word, index) => {
+    const space = index === 0 ? "" : " ";
+    const totalLines = lines.split(/\n/)
+    const currentLine = totalLines[totalLines.length - 1]
+
+    if (word.length >= MAX_LINE_WIDTH) {
+      lines += `${index === 0 ? '' : '\n'}${word}`; //Si es la primera palabra del array no agrega salto de línea
+    } else if (currentLine.length + word.length + space.length < MAX_LINE_WIDTH) {
+      lines += `${space}${word}`; //Concatena espacio y palabra
+    } else if (currentLine.length + word.length + space.length === MAX_LINE_WIDTH) {
+      lines += `${space}${word}\n`; //Agrega el salto
+    } else {
+      lines += `\n${word}`;
+    }
+  })
+   return lines
+  }
 
   const transformText = input => {
-    const words = input
-      .split(/\n/g) // elimina saltos de línea
-      .filter(line => !!line) // elimina del array los espacios vacíos
-      .map(line => line.replace(/\s{2,}/g, " ")) // elimina espacios adicionales
-      .join(" ") // convierte el array en un string, es decir una sola línea
-      .split(" "); // convierte el string (una línea) en un array de palabras
+    let output = ""
 
-      // console.log(words);
+    const paragraphs = input
+    .split(/\n\n/g) // elimina saltos de línea
+    .filter(line => !!line) // elimina del array los espacios vacíos
 
-    const MAX_LINE_WIDTH = 80;
-
-    let lines = "";
-
-    words.forEach((word, index) => {
-      const space = index === 0 ? "" : " ";
-      const totalLines = lines.split(/\n/)
-      const currentLine = totalLines[totalLines.length - 1]
-
-      if (word.length >= MAX_LINE_WIDTH) {
-        lines += `${index === 0 ? '' : '\n'}${word}`; //Si es la primera palabra del array no agrega salto de línea
-      } else if (currentLine.length + word.length + space.length < MAX_LINE_WIDTH) {
-        lines += `${space}${word}`; //Concatena espacio y palabra
-      } else if (currentLine.length + word.length + space.length === MAX_LINE_WIDTH) {
-        lines += `${space}${word}\n`; //Agrega el salto
-      } else {
-        lines += `\n${word}`;
-      }
-    })
-
-    setTextOutput(lines);
-  }
+    paragraphs.forEach((paragraph, index) => {
+      output += formatParagraph(paragraph);
+      output += index < paragraphs.length - 1 ? '\n\n' : ''
+    } 
+    )
+    setTextOutput(output);
+  };
   
   
   return (
